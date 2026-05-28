@@ -1,0 +1,17 @@
+
+{
+  "name": "transport-backend",
+  "version": "1.0.0",
+  "description": "Transport Management Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Chandrabose",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "fs-extra": "^11.3.0"
+  }
+}
