@@ -120,3 +120,44 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+/* =========================
+   PLACES PROXY API
+   Usage: set env var PLACES_API_KEY and call /api/places?q=your+query
+========================= */
+
+app.get('/api/places', async (req, res) => {
+  const q = req.query.q || 'places in India';
+
+  try {
+    const apiKey = process.env.PLACES_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({
+        success: false,
+        message: 'PLACES_API_KEY not configured in environment',
+      });
+    }
+
+    // Replace the base URL with your provider's endpoint.
+    const baseUrl = 'https://api.example.com/search';
+    const url = `${baseUrl}?q=${encodeURIComponent(q)}`;
+
+    const r = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!r.ok) {
+      const text = await r.text();
+      return res.status(r.status).send(text);
+    }
+
+    const body = await r.json();
+    res.json(body);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
